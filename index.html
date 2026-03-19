@@ -168,126 +168,138 @@
         let exp = 0;
         let lv = 1;
 
-        const scenarios = [
+      const scenarios = [
     {
-        id: 1, type: 'trap', difficulty: 'Dễ',
-        zaloMsg: "Chào Hoàng, anh vừa gửi mail bản thảo dự án 2026 cho em. Check rồi báo cáo sếp trước 2h nhé!",
-        senderDisplay: "Sếp Tổng (Nguyễn Văn A)",
-        senderReal: "ceo-thanglong.edu@gmail.com", // SAI: Dùng Gmail cá nhân thay vì domain trường
-        subject: "[KHẨN CẤP] Bản thảo dự án bảo mật 2026",
-        body: "Chào em, file này cực kỳ quan trọng. Em nhấn vào link dưới để tải về từ Google Drive của sếp nhé: <br><br><a href='#' onclick='checkAnswer(\"trap\")' style='color:#1a73e8; font-weight:bold;'>https://drive.google.com.manager-file.net/share/d/1x92...</a>",
-        explanation: "Hacker giả mạo Sếp trên Zalo. Sếp thật không bao giờ dùng <b>@gmail.com</b> gửi tài liệu mật. Ngoài ra link dẫn tới domain <b>.net</b> lạ."
+        id: 1, type: 'trap', difficulty: 'Dễ', hasZalo: false,
+        senderDisplay: "Apple Security Team",
+        senderReal: "security@apple-verify-service.net",
+        subject: "[Cảnh báo] Phát hiện đăng nhập lạ vào iCloud của bạn",
+        previewText: "Tài khoản iCloud của bạn vừa được đăng nhập từ Moscow...",
+        body: "Chào bạn, tài khoản iCloud của bạn vừa được đăng nhập từ Moscow, Nga. Nếu không phải là bạn, hãy click vào link dưới đây để khóa tài khoản ngay: <br><br><a href='#' onclick='checkAnswer(\"trap\")' style='color:#1a73e8; font-weight:bold;'>https://icloud.com.security-check.ru/login</a>",
+        explanation: "Lỗi cơ bản: Tên miền email là .net lạ. Kẻ tấn công đánh vào nỗi sợ bị mất tài khoản để ép bạn click nhanh."
     },
     {
-        id: 2, type: 'safe', difficulty: 'Dễ',
-        zaloMsg: "Sếp vừa gửi lịch họp tuần tới qua mail, em cập nhật vào Google Calendar giúp sếp.",
-        senderDisplay: "Sếp Tổng (Nguyễn Văn A)",
-        senderReal: "ceo@thanglong.edu.vn", // ĐÚNG: Domain trường
-        subject: "Lịch họp nội bộ tuần 04/2026",
-        body: "Chào Hoàng, đây là lịch họp chi tiết cho tuần tới của Team IT. <br><br>Lịch họp: <b>Thứ 2 (8:00 AM) - Phòng 402</b>.<br>Thứ 4 (2:00 PM) - Online Meet.",
-        explanation: "Email an toàn. Địa chỉ người gửi đúng chuẩn domain công ty và nội dung khớp hoàn toàn với tin nhắn Zalo."
+        id: 2, type: 'safe', difficulty: 'Dễ', hasZalo: false,
+        senderDisplay: "Google Accounts",
+        senderReal: "no-reply@accounts.google.com",
+        subject: "Mã xác minh danh tính của bạn",
+        previewText: "Mã xác minh Google của bạn là: 582931...",
+        body: "Chào Hoàng, mã xác minh Google của bạn là: <b>582931</b>. Nếu bạn không yêu cầu mã này, bạn có thể bỏ qua thư này.",
+        explanation: "Đây là email an toàn từ tên miền chính thống accounts.google.com."
     },
     {
-        id: 3, type: 'trap', difficulty: 'Trung bình',
+        id: 3, type: 'trap', difficulty: 'Trung bình', hasZalo: true,
         zaloMsg: "Em ơi, My kế toán đây. Chị gửi lại phiếu lương tháng 3 đã điều chỉnh, em xem có khớp không nhé.",
         senderDisplay: "Phòng Kế Toán (My NT)",
-        senderReal: "hr-thanglong@outlook.com.vn", // SAI: Domain Outlook lạ
+        senderReal: "hr-thanglong@outlook.com.vn",
         subject: "Phiếu lương tháng 03/2026 - Đã điều chỉnh",
+        previewText: "Chào em, chị gửi lại phiếu lương tháng 3 đã điều chỉnh...",
         body: "Chào Hoàng, chị gửi em file PDF bảng lương tháng này. Vui lòng kiểm tra kỹ.<br><br>File đính kèm: <b style='color:blue; cursor:pointer;' onclick='checkAnswer(\"trap\")'>Bang_luong_T3.pdf.exe</b>",
-        explanation: "Cảnh giác cao độ với file có đuôi mở rộng kép <b>.pdf.exe</b>. Đây là mã độc thực thi, không phải tài liệu PDF."
+        explanation: "Hacker giả mạo đồng nghiệp trên Zalo. Cảnh giác với file có đuôi kép .pdf.exe."
     },
     {
-        id: 4, type: 'safe', difficulty: 'Trung bình',
-        zaloMsg: "Duy IT đây, tớ vừa gửi mail xác nhận cấp quyền truy cập Server cho cậu đó.",
+        id: 4, type: 'safe', difficulty: 'Trung bình', hasZalo: false,
         senderDisplay: "IT Support (Duy Nguyen)",
-        senderReal: "it-support@thanglong.edu.vn", // ĐÚNG
+        senderReal: "it-support@thanglong.edu.vn",
         subject: "Xác nhận cấp quyền truy cập Server nội bộ",
+        previewText: "Yêu cầu của bạn đã được phê duyệt. Vui lòng đăng nhập...",
         body: "Chào Hoàng, yêu cầu của bạn đã được phê duyệt. Vui lòng đăng nhập hệ thống để kiểm tra.<br><br>Link: <a href='#' onclick='checkAnswer(\"safe\")' style='color:#1a73e8;'>https://portal.thanglong.edu.vn/auth</a>",
-        explanation: "Email chính thống từ bộ phận IT nội bộ, đường dẫn portal chuẩn của trường."
+        explanation: "Email chính thống từ bộ phận IT nội bộ với đường link chuẩn."
     },
     {
-        id: 5, type: 'trap', difficulty: 'Khó',
-        zaloMsg: "Microsoft vừa báo lỗi tài khoản Office của em có vấn đề, check mail xử lý ngay không bị khóa acc đấy.",
+        id: 5, type: 'trap', difficulty: 'Khó', hasZalo: false,
         senderDisplay: "Microsoft Security Team",
-        senderReal: "no-reply@micros0ft.com", // SAI: Typosquatting (số 0 thay cho chữ o)
-        subject: "[Cảnh báo] Tài khoản Office 365 của bạn bị tạm khóa",
-        body: "Phát hiện đăng nhập lạ từ địa chỉ IP: 14.232.x.x. Vui lòng xác minh danh tính ngay để bảo vệ tài khoản.<br><br><button onclick='checkAnswer(\"trap\")' style='padding:10px; background:#0078d4; color:white; border:none; cursor:pointer;'>XÁC MINH NGAY</button>",
-        explanation: "Hacker dùng kỹ thuật <b>Typosquatting</b> (thay chữ o bằng số 0 trong tên miền micros0ft). Rất khó nhận ra nếu không soi kỹ."
+        senderReal: "no-reply@micros0ft.com", 
+        subject: "[Cảnh báo] Tài khoản Office 365 bị tạm khóa",
+        previewText: "Phát hiện đăng nhập lạ từ địa chỉ IP: 14.232.x.x...",
+        body: "Phát hiện đăng nhập lạ từ địa chỉ IP: 14.232.x.x. Vui lòng xác minh danh tính ngay.<br><br><button onclick='checkAnswer(\"trap\")' style='padding:10px; background:#0078d4; color:white; border:none; cursor:pointer;'>XÁC MINH NGAY</button>",
+        explanation: "Lỗi Typosquatting: thay chữ 'o' bằng số '0' trong micros0ft."
     },
     {
-        id: 6, type: 'safe', difficulty: 'Khó',
-        zaloMsg: "LinkedIn báo có người muốn kết nối với cậu kìa, chắc là bên tuyển dụng đấy.",
+        id: 6, type: 'safe', difficulty: 'Khó', hasZalo: true,
+        zaloMsg: "Anh gửi cái file hướng dẫn sử dụng phần mềm mới qua mail, em xem có chỗ nào khó hiểu không nhé.",
+        senderDisplay: "Đồng nghiệp (Lê Nam)",
+        senderReal: "nam.le@thanglong.edu.vn",
+        subject: "Tài liệu hướng dẫn phần mềm CMS",
+        previewText: "Chào Hoàng, anh gửi em file hướng dẫn phần mềm mới...",
+        body: "Chào Hoàng, như đã trao đổi qua Zalo, anh gửi em file hướng dẫn.<br><br><a href='#' onclick='checkAnswer(\"safe\")' style='color:#1a73e8;'>Download_Huong_Dan.pdf</a>",
+        explanation: "Email an toàn, khớp với trao đổi trên Zalo."
+    },
+    {
+        id: 7, type: 'trap', difficulty: 'Rất khó', hasZalo: true,
+        zaloMsg: "Hoàng ơi, sếp đang họp gấp. Check mail sếp gửi file dự án mật rà soát cho sếp nhé!",
+        senderDisplay: "Sếp Tổng (Nguyễn Văn A)",
+        senderReal: "ceo-thanglong.edu@gmail.com",
+        subject: "[KHẨN CẤP] Tài liệu dự án bảo mật 2026",
+        previewText: "Chào em, file này cực kỳ quan trọng, sếp gửi qua Drive...",
+        body: "Chào em, file này cực kỳ quan trọng. Em nhấn vào link dưới để tải về nhé: <br><br><a href='#' onclick='checkAnswer(\"trap\")' style='color:#1a73e8; font-weight:bold;'>https://drive.google.com.manager-file.net/share/v1</a>",
+        explanation: "Sếp thật không dùng Gmail cá nhân gửi tin mật."
+    },
+    {
+        id: 8, type: 'safe', difficulty: 'Rất khó', hasZalo: false,
         senderDisplay: "LinkedIn Notifications",
-        senderReal: "notifications-noreply@linkedin.com", // ĐÚNG
-        subject: "Dinh Nhat Hoang, bạn có 5 lời mời kết nối mới",
-        body: "Xem danh sách những người muốn kết nối với bạn trên mạng xã hội nghề nghiệp LinkedIn.<br><br><a href='#' onclick='checkAnswer(\"safe\")' style='color:#00a0dc;'>Xem lời mời</a>",
-        explanation: "Email tự động từ hệ thống LinkedIn chính thống với tên miền chuẩn."
+        senderReal: "notifications-noreply@linkedin.com",
+        subject: "Hoàng, bạn có 5 lời mời kết nối mới",
+        previewText: "Xem các lời mời kết nối từ các chuyên gia trong ngành...",
+        body: "Xem các lời mời kết nối mới của bạn trên LinkedIn.<br><br><a href='#' onclick='checkAnswer(\"safe\")' style='color:#00a0dc;'>Xem lời mời</a>",
+        explanation: "Email an toàn từ hệ thống LinkedIn."
     },
     {
-        id: 7, type: 'trap', difficulty: 'Rất khó',
-        zaloMsg: "Bên ngân hàng vừa gửi mail xác nhận sao kê thẻ tín dụng cho cậu kìa.",
-        senderDisplay: "Vietcombank E-Banking",
-        senderReal: "ebanking@vcb-digital.com.vn", // SAI: Domain giả mạo (VCB thật là vietcombank.com.vn)
-        subject: "Sao kê giao dịch tháng 03/2026 - Thẻ Visa xxx123",
-        body: "Chào quý khách, vui lòng nhấn vào nút bên dưới để xem sao kê chi tiết tháng này.<br><br><button onclick='checkAnswer(\"trap\")' style='padding:10px; background:#009245; color:white; border:none; cursor:pointer;'>XEM SAO KÊ</button>",
-        explanation: "Email mạo danh ngân hàng cực kỳ tinh vi. Tên miền <b>vcb-digital.com.vn</b> là giả mạo để đánh lừa người dùng."
-    },
-    {
-        id: 8, type: 'safe', difficulty: 'Rất khó',
-        zaloMsg: "Canteen báo menu cơm trưa tuần mới có rồi đó Hoàng.",
-        senderDisplay: "Canteen Thang Long",
-        senderReal: "canteen@thanglong.edu.vn", // ĐÚNG
-        subject: "Thực đơn cơm trưa tuần 4 - Tháng 3",
-        body: "Thân gửi cán bộ giảng viên và sinh viên thực đơn cơm trưa tuần này tại Canteen nhà A.<br><br>Xem menu tại: <a href='#' onclick='checkAnswer(\"safe\")' style='color:green;'>Menu_Tuan_4.pdf</a>",
-        explanation: "Email thông báo nội bộ thường xuyên, domain người gửi hoàn toàn tin cậy."
-    },
-    {
-        id: 9, type: 'trap', difficulty: 'Chuyên gia',
-        zaloMsg: "Menu cơm trưa nay có mã giảm giá 50% cho nhân viên, quét QR đặt món sớm đi không hết nhé!",
+        id: 9, type: 'trap', difficulty: 'Chuyên gia', hasZalo: false,
         senderDisplay: "Canteen Online",
-        senderReal: "no-reply@canteen-thanglong.com", // SAI
+        senderReal: "no-reply@canteen-thanglong.com",
         subject: "Ưu đãi đặt cơm trưa - Giảm giá 50%",
-        body: "Quét mã QR dưới đây để nhận voucher giảm giá 50% khi đặt cơm qua App.<br><br><img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://login.vcb-portal.net' style='width:120px; cursor:pointer;' onclick='checkAnswer(\"trap\")'>",
-        explanation: "Kỹ thuật <b>Quishing (QR Phishing)</b>. Hacker dùng mã QR để che giấu đường link lừa đảo dẫn tới trang chiếm đoạt tài khoản."
+        previewText: "Quét mã QR để nhận voucher giảm giá cơm trưa hôm nay...",
+        body: "Quét mã QR để nhận voucher giảm giá 50% khi đặt cơm.<br><br><img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://login.vcb-portal.net' style='width:120px; cursor:pointer;' onclick='checkAnswer(\"trap\")'>",
+        explanation: "Kỹ thuật Quishing (QR Phishing) dẫn tới trang giả mạo ngân hàng."
     },
     {
-        id: 10, type: 'safe', difficulty: 'Chuyên gia',
-        zaloMsg: "Google gửi mail báo cậu vừa dùng bộ nhớ vượt mức kìa, check xem có cần nâng cấp không.",
-        senderDisplay: "Google One",
-        senderReal: "googleone-noreply@google.com", // ĐÚNG
-        subject: "Thông báo: Bộ nhớ Google của bạn đã đầy 90%",
-        body: "Dung lượng lưu trữ của bạn sắp hết. Hãy dọn dẹp hoặc nâng cấp để tiếp tục sử dụng Google Drive và Gmail.<br><br><a href='#' onclick='checkAnswer(\"safe\")' style='color:#1a73e8;'>Quản lý bộ nhớ</a>",
-        explanation: "Email thông báo hệ thống chính thức từ Google với đầy đủ thông tin xác thực."
+        id: 10, type: 'safe', difficulty: 'Chuyên gia', hasZalo: true,
+        zaloMsg: "My kế toán đây Hoàng, tớ gửi mail phiếu thu phí dịch vụ cậu kiểm tra lại nhé.",
+        senderDisplay: "My Kế Toán",
+        senderReal: "my.nt@thanglong.edu.vn",
+        subject: "Phiếu thu phí dịch vụ tháng 03/2026",
+        previewText: "Chào anh, gửi anh phiếu thu phí dịch vụ tháng này...",
+        body: "Chào anh, gửi anh phiếu thu phí. Anh kiểm tra lại thông tin nhé.<br><br>File: <b>Phieu_Thu_Thang_3.png</b>",
+        explanation: "Email an toàn từ đồng nghiệp thật."
     }
 ];
 
-        function initLevel() {
-            const s = scenarios[currentIdx];
-            
-            // Reset Apps
-            document.getElementById('mail-list').innerHTML = `
-                <div class="mail-item" onclick="viewMail()">
-                    <div style="width:200px; font-weight:bold;">${s.senderDisplay}</div>
-                    <div style="flex:1;"><strong>${s.subject}</strong> - <span style="color:#777;">Chào em, file này cực kỳ quan trọng...</span></div>
-                </div>
-            `;
-            document.getElementById('zalo-chat-content').innerHTML = `<div class="msg received">${s.zaloMsg}</div>`;
-            
-            // Setup Mail View
-            document.getElementById('mail-subject').innerText = s.subject;
-            document.getElementById('mail-sender-display').innerText = s.senderDisplay;
-            document.getElementById('real-address').innerText = `<${s.senderReal}>`;
-            document.getElementById('mail-body').innerHTML = s.body;
-            document.getElementById('btn-detail').style.display = 'inline';
-            document.getElementById('real-address').style.display = 'none';
+    function initLevel() {
+    const s = scenarios[currentIdx];
+    
+    document.getElementById('mail-list').innerHTML = `
+        <div class="mail-item" onclick="viewMail()">
+            <div style="width:200px; font-weight:bold;">${s.senderDisplay}</div>
+            <div style="flex:1;"><strong>${s.subject}</strong> - <span style="color:#777;">${s.previewText}</span></div>
+        </div>
+    `;
 
-            // Notify
-            setTimeout(() => {
-                document.getElementById('notify-msg').innerText = s.zaloMsg;
-                document.getElementById('notification').classList.add('show');
-                setTimeout(() => document.getElementById('notification').classList.remove('show'), 5000);
-            }, 1000);
-        }
+    const zaloChat = document.getElementById('zalo-chat-content');
+    if(s.hasZalo) {
+        zaloChat.innerHTML = `<div class="msg received">${s.zaloMsg}</div>`;
+        setTimeout(() => {
+            document.getElementById('notify-msg').innerText = s.zaloMsg;
+            document.getElementById('notification').classList.add('show');
+            setTimeout(() => document.getElementById('notification').classList.remove('show'), 5000);
+        }, 1000);
+    } else {
+        zaloChat.innerHTML = `<div style="padding:20px; color:#999; text-align:center; font-size:13px;">Không có tin nhắn mới</div>`;
+    }
+    
+    document.getElementById('mail-subject').innerText = s.subject;
+    document.getElementById('mail-sender-display').innerText = s.senderDisplay;
+    document.getElementById('real-address').innerText = `<${s.senderReal}>`;
+    document.getElementById('mail-body').innerHTML = s.body;
+    document.getElementById('btn-detail').style.display = 'inline';
+    document.getElementById('real-address').style.display = 'none';
+
+    const actionArea = document.querySelector('#mail-view div[style*="margin-top:30px"]');
+    actionArea.innerHTML = `
+        <button onclick="checkAnswer('report')" style="background:#ea4335; color:white; border:none; padding:10px 20px; border-radius:4px; font-weight:bold; cursor:pointer; margin-right:10px;">⚠️ BÁO CÁO LỪA ĐẢO</button>
+        <button onclick="checkAnswer('safe')" style="background:#2ecc71; color:white; border:none; padding:10px 20px; border-radius:4px; font-weight:bold; cursor:pointer;">✅ TIN TƯỞNG & TIẾP TỤC</button>
+    `;
+}
 
         function showAddress() {
             document.getElementById('btn-detail').style.display = 'none';
@@ -310,7 +322,7 @@
             } else {
                 title.innerText = "💥 SẬP BẪY!";
                 title.style.color = "#d93025";
-                msg.innerHTML = `Bạn đã thiếu cảnh giác và bị Hacker tấn công. <br><br>${s.explanation}`;
+                msg.innerHTML = `Bạn đã thiếu cảnh giác.<br><br>${s.explanation}`;
                 updateStats(0);
             }
         }
