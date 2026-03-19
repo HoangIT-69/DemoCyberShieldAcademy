@@ -2,278 +2,367 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberShield Academy - Survival Inbox v2.0</title>
+    <title>CyberShield - Office Desktop Simulation</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        body { background-color: #f4f7f6; display: flex; height: 100vh; overflow: hidden; }
-        
-        /* Layout chính */
-        .sidebar { width: 250px; background-color: #2c3e50; color: white; padding: 20px; }
-        .sidebar h2 { font-size: 18px; margin-bottom: 30px; color: #1abc9c; }
-        .menu-item { padding: 12px 15px; background-color: #34495e; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        
-        .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
-        .topbar { background-color: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
-        
-        /* Giao diện Email */
-        .email-container { padding: 20px; flex: 1; overflow-y: auto; }
-        .email-card { background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 25px; border-left: 5px solid #bdc3c7; }
-        
-        .phishing-card { border-left: 5px solid #e74c3c; }
-        .safe-card { border-left: 5px solid #2ecc71; }
+        :root {
+            --win-blue: #0078d7;
+            --taskbar-bg: rgba(25, 25, 25, 0.9);
+            --zalo-blue: #0068ff;
+            --gmail-red: #ea4335;
+            --bg-gray: #f6f8fc;
+        }
 
-        .email-header h1 { font-size: 18px; color: #333; margin-bottom: 10px; }
-        .sender-info { color: #555; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        .sender-email { color: #333; font-weight: bold; }
-        
-        .email-body { font-size: 15px; line-height: 1.6; color: #444; margin-bottom: 25px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { 
+            height: 100vh; width: 100vw; 
+            background: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1920&q=80') center/cover; 
+            overflow: hidden; 
+        }
 
-        /* Các yếu tố tương tác */
-        .interactive-element { display: inline-flex; align-items: center; gap: 8px; margin: 10px 0; padding: 8px 12px; background-color: #f1f8ff; color: #0366d6; border: 1px dashed #bdc3c7; text-decoration: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-        .interactive-element:hover { background-color: #e1efff; border-color: #0366d6; }
-        
-        .file-icon { font-size: 20px; }
-        .fake-file { background-color: #ffebee; color: #b71c1c; border-color: #ef9a9a; }
-        .fake-file:hover { background-color: #ffcdd2; }
-        
-        /* Nút Báo cáo */
-        .action-zone { display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
-        .btn-report { padding: 10px 20px; background-color: #e74c3c; color: white; border: none; border-radius: 5px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-        .btn-report:hover { background-color: #c0392b; transform: translateY(-1px); }
+        /* Desktop */
+        #desktop { height: calc(100vh - 45px); position: relative; padding: 20px; }
+        .icon { width: 80px; text-align: center; color: white; text-shadow: 1px 1px 2px black; cursor: pointer; margin-bottom: 25px; transition: 0.2s; padding: 10px; }
+        .icon:hover { background: rgba(255,255,255,0.2); border-radius: 8px; }
+        .icon img { width: 45px; display: block; margin: 0 auto 5px; }
 
-        /* Màn hình Modal (KẾT QUẢ / TỔNG KẾT) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; animation: fadeInModal 0.3s; }
-        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+        /* Windows Common */
+        .window { position: absolute; background: white; border-radius: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); display: none; flex-direction: column; overflow: hidden; border: 1px solid #ccc; z-index: 10; }
+        .win-header { background: #fff; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; cursor: move; border-bottom: 1px solid #eee; font-size: 13px; color: #555; }
+        .win-controls span { margin-left: 12px; cursor: pointer; font-size: 18px; width: 25px; text-align: center; border-radius: 3px; }
+        .win-controls .close:hover { background: #e81123; color: white; }
+
+        /* Zalo App (Locked Input) */
+        #zalo-win { width: 350px; height: 500px; top: 50px; left: 50px; border-left: 5px solid var(--zalo-blue); }
+        .zalo-chat { flex: 1; background: #ebf0f3; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 85%; padding: 10px; border-radius: 10px; font-size: 14px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .msg.received { background: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .zalo-footer { padding: 15px; background: #f0f0f0; border-top: 1px solid #ddd; text-align: center; color: #999; font-size: 12px; font-style: italic; }
+
+        /* Gmail App UI */
+        #gmail-win { width: 950px; height: 600px; top: 100px; left: 400px; }
+        .gmail-container { display: flex; flex: 1; height: 100%; }
+        .gmail-aside { width: 240px; background: var(--bg-gray); padding: 15px; }
+        .btn-compose { background: #c2e7ff; padding: 16px 24px; border-radius: 16px; display: inline-flex; align-items: center; gap: 12px; font-weight: 500; cursor: pointer; margin-bottom: 20px; }
+        .gmail-main { flex: 1; display: flex; flex-direction: column; background: white; border-top-left-radius: 16px; }
+        .mail-item { padding: 12px 20px; border-bottom: 1px solid #f1f3f4; display: flex; align-items: center; cursor: pointer; transition: 0.1s; }
+        .mail-item:hover { background: #f2f6fc; box-shadow: inset 3px 0 0 var(--gmail-red); }
         
-        .modal-content { background: white; padding: 40px; border-radius: 10px; width: 550px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: popInModal 0.3s 0.2s ease-out both; opacity: 0; }
-        @keyframes popInModal { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .modal-icon { font-size: 60px; margin-bottom: 20px; }
-        .modal-title { font-size: 28px; margin-bottom: 15px; font-weight: bold; }
-        .modal-desc { font-size: 16px; color: #444; line-height: 1.5; margin-bottom: 20px; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 5px; border-left: 4px solid #f1c40f;}
-        
-        .fail-theme .modal-title, .incorrect-report-theme .modal-title { color: #e74c3c; }
-        .success-theme .modal-title { color: #2ecc71; }
-        
-        .modal-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 20px;}
-        .btn-modal { padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; color: white; font-weight: bold;}
-        .btn-close { background: #333; }
-        .btn-close:hover { background: #000; }
-        .btn-restart { background: #16a085; }
-        .btn-restart:hover { background: #1abc9c; }
-        
-        /* Highlight lỗi */
-        .red-flag { color: #e74c3c; font-weight: bold; background: #ffebee; padding: 2px 4px; border-radius: 3px; }
+        /* Email View */
+        #mail-view { display: none; padding: 25px; height: 100%; overflow-y: auto; }
+        .sender-box { margin: 15px 0; padding-bottom: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: flex-start; }
+        .sender-name { font-weight: bold; font-size: 14px; }
+        .sender-email-hidden { color: #5f6368; font-size: 12px; margin-top: 4px; display: flex; align-items: center; }
+        .btn-show-detail { color: var(--win-blue); cursor: pointer; text-decoration: underline; margin-left: 8px; font-size: 11px; }
+        .real-address { display: none; color: #d93025; font-weight: bold; background: #fce8e6; padding: 2px 5px; border-radius: 4px; }
+
+        /* Taskbar */
+        #taskbar { height: 45px; background: var(--taskbar-bg); backdrop-filter: blur(10px); position: fixed; bottom: 0; width: 100%; display: flex; align-items: center; padding: 0 15px; z-index: 1000; }
+        .task-icons { flex: 1; display: flex; gap: 15px; }
+        .task-icons img { width: 30px; height: 30px; cursor: pointer; transition: 0.2s; }
+        .task-icons img:hover { transform: translateY(-3px); }
+        .stats { color: white; display: flex; align-items: center; gap: 15px; font-size: 12px; }
+        .exp-container { width: 120px; height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
+        .exp-fill { height: 100%; background: #2ecc71; width: 0%; transition: 0.5s; }
+
+        /* Notification */
+        #notification {
+            position: fixed; top: 20px; right: -350px; width: 320px; background: white; border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); padding: 15px; display: flex; align-items: center;
+            z-index: 9999; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border-left: 4px solid var(--zalo-blue);
+        }
+        #notification.show { right: 20px; }
+
+        /* Modal Result */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 10000; }
+        .modal { background: white; padding: 40px; border-radius: 12px; text-align: center; max-width: 500px; }
+        .btn-action { margin-top: 25px; padding: 12px 30px; border: none; border-radius: 6px; background: #1a73e8; color: white; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h2>CyberShield Academy</h2>
-        <div class="menu-item">📥 Hộp thư đến (v2.0)</div>
-        <div class="menu-item" style="background: transparent;">📤 Đã gửi</div>
-        <div class="menu-item" style="background: transparent;">⚠️ Thư rác</div>
-    </div>
-
-    <div class="main-content">
-        <div class="topbar">
-            <div><strong>Nhiệm vụ:</strong> Phân tích và tương tác an toàn với 10 email giả lập.</div>
-            <div id="gameStats">⏳ Câu 1/10 | Điểm Cảnh Giác: 100</div>
+    <div id="desktop">
+        <div class="icon" onclick="openApp('zalo-win')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png"> Zalo
         </div>
-        
-        <div class="email-container" id="emailArea"></div>
-
-        <div class="action-zone">
-            <button class="btn-report" onclick="handleReport()">
-                ⚠️ BÁO CÁO LỪA ĐẢO
-            </button>
+        <div class="icon" onclick="openApp('gmail-win')">
+            <img src="https://static.vecteezy.com/system/resources/previews/022/484/516/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png"> Gmail
         </div>
-    </div>
 
-    <div class="modal-overlay" id="resultModal">
-        <div class="modal-content" id="modalBox">
-            <div class="modal-icon" id="modalIcon"></div>
-            <div class="modal-title" id="modalTitle"></div>
-            <div class="modal-desc" id="modalDesc"></div>
-            <div class="modal-buttons">
-                <button class="btn-modal btn-close" id="modalActionBtn" onclick="nextEmail()">Tiếp Tục</button>
+        <div id="zalo-win" class="window">
+            <div class="win-header">
+                <span>Zalo Desktop</span>
+                <div class="win-controls"><span class="close" onclick="closeApp('zalo-win')">×</span></div>
+            </div>
+            <div class="zalo-chat" id="zalo-chat-content"></div>
+            <div class="zalo-footer">Hệ thống: Bạn hiện không thể gửi tin nhắn vào lúc này.</div>
+        </div>
+
+        <div id="gmail-win" class="window">
+            <div class="win-header">
+                <span>Gmail - Inbox</span>
+                <div class="win-controls"><span class="close" onclick="closeApp('gmail-win')">×</span></div>
+            </div>
+            <div class="gmail-container">
+                <div class="gmail-aside">
+                    <div class="btn-compose"><span>+</span> Compose</div>
+                    <div style="color:var(--gmail-red); font-weight:600; padding:10px; background:#fce8e6; border-radius:0 20px 20px 0;">📥 Inbox</div>
+                    <div style="padding:10px; color:#5f6368;">⭐ Starred</div>
+                    <div style="padding:10px; color:#5f6368;">🕒 Snoozed</div>
+                </div>
+                <div class="gmail-main">
+                    <div id="mail-list"></div>
+                    <div id="mail-view">
+                        <button onclick="backToInbox()" style="border:none; background:none; cursor:pointer; color:#5f6368; font-weight:bold; margin-bottom:20px;">← Quay lại</button>
+                        <h2 id="mail-subject" style="font-weight:400; margin-bottom:15px;"></h2>
+                        <div class="sender-box">
+                            <div>
+                                <div id="mail-sender-display" class="sender-name"></div>
+                                <div class="sender-email-hidden">
+                                    Đang gửi đến bạn <span id="btn-detail" class="btn-show-detail" onclick="showAddress()">[Chi tiết]</span>
+                                    <span id="real-address" class="real-address"></span>
+                                </div>
+                            </div>
+                            <div style="color:#777; font-size:12px;">11:40 AM (vừa xong)</div>
+                        </div>
+                        <div id="mail-body" style="line-height:1.6; padding:20px 0;"></div>
+                        <div style="margin-top:30px; border-top:1px solid #eee; padding-top:20px;">
+                            <button onclick="checkAnswer('report')" style="background:var(--gmail-red); color:white; border:none; padding:10px 20px; border-radius:4px; font-weight:bold; cursor:pointer;">⚠️ BÁO CÁO LỪA ĐẢO</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <div id="notification" onclick="openApp('zalo-win')">
+        <img src="https://ui-avatars.com/api/?name=Sep+Tong&background=0068ff&color=fff" style="width:40px; border-radius:50%; margin-right:15px;">
+        <div>
+            <div style="font-weight:bold; font-size:14px;">Sếp Tổng</div>
+            <div id="notify-msg" style="font-size:12px; color:#666;"></div>
+        </div>
+    </div>
+
+    <div id="taskbar">
+        <div class="task-icons">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_Icons-09-512.png/512px-Google_Icons-09-512.png" style="background:white; border-radius:4px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png" onclick="openApp('zalo-win')">
+            <img src="https://static.vecteezy.com/system/resources/previews/022/484/516/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png" onclick="openApp('gmail-win')">
+        </div>
+        <div class="stats">
+            <span id="level-txt">LV. 1</span>
+            <div class="exp-container"><div id="exp-fill" class="exp-fill"></div></div>
+            <span id="exp-txt">0/1000 EXP</span>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay">
+        <div class="modal">
+            <h1 id="res-title" style="font-size:32px;"></h1>
+            <p id="res-msg" style="margin:20px 0; color:#555; line-height:1.6;"></p>
+            <button class="btn-action" onclick="nextLevel()">TIẾP TỤC HÀNH TRÌNH</button>
+        </div>
+    </div>
+
     <script>
-        let currentEmailIndex = 0;
-        let userScore = 100;
-        let gameActive = true;
+        let currentIdx = 0;
+        let exp = 0;
+        let lv = 1;
 
-        const emailScenarios = [
-            { isPhishing: true, title: '[KHẨN CẤP] Rà soát sai lệch điểm GPA sinh viên CNTT', sender: 'Phòng Đào tạo Đại học Thăng Long &lt;daotao@thanglong-edu.vn&gt;', to: 'Sinh viên Đinh Nhật Hoàng', date: '19/03/2026', body: `<p>Chào em,</p><br><p>Hệ thống đào tạo vừa rà soát điểm của em và phát hiện GPA của em hiện đang thấp hơn 3.0 so với dữ liệu.</p><br><p>Yêu cầu em khẩn trương đăng nhập vào portal sinh viên để xác nhận bảng điểm trước 17h00 ngày hôm nay để tránh bị ảnh hưởng tiến độ học tập.</p>`, interaction: { type: 'link', text: 'https://portal.thanglong.edu.vn.student-verify.net/auth/login' }, explanation: `<b>Dấu hiệu bỏ lỡ:</b><br><br>1. <span class="red-flag">Tên miền giả:</span> <I>thanglong-edu.vn</I> (tên gốc phải là <I>thanglong.edu.vn</I>).<br><br>2. <span class="red-flag">Đường link bẫy:</span> Link kết thúc bằng <I>student-verify.net</I>, không phải portal của trường.` },
-            { isPhishing: false, title: 'Welcome to Netflix! Khởi động gói đăng ký của bạn.', sender: 'Netflix &lt;info@mailer.netflix.com&gt;', to: 'nhathoang.dinh@email.com', date: '19/03/2026', body: `<p>Hoàng thân mến,</p><br><p>Cảm ơn bạn đã tham gia Netflix! Tài khoản của bạn đã sẵn sàng. Hãy bấm vào nút bên dưới để hoàn tất việc thiết lập gói đăng ký.</p>`, interaction: { type: 'safe_link', text: '✅ Bắt Đầu Trải Nghiệm' } },
-            { isPhishing: true, title: 'Thông báo điều chỉnh lương nhân sự quý I / 2026', sender: 'Nguyễn Tiến Dũng - Giám đốc Nhân sự &lt;ceo@corporate-solutions.vn&gt;', to: 'Toàn thể nhân viên', date: '19/03/2026', body: `<p>Chào toàn thể nhân viên,</p><br><p>Kèm theo email này là danh sách điều chỉnh lương thưởng của quý I / 2026 dựa trên hiệu suất công việc.</p><br><p>Mọi người vui lòng mở file đính kèm bên dưới để xem chi tiết thông tin của mình.</p>`, interaction: { type: 'fake_file', text: '📄 danh_sach_dieu_chinh_luong.pdf.exe' }, explanation: `<b>Dấu hiệu bỏ lỡ:</b><br><br>1. <span class="red-flag">Đuôi file thực thi nguy hiểm:</span> File đính kèm là <I>.pdf.exe</I> (không phải <I>.pdf</I> thật). Đây là mã độc.` },
-            { isPhishing: false, title: 'Ảnh chụp kỷ niệm teambuilding Cát Bà tuần trước', sender: 'Trần Lan Hương - Admin &lt;huongtl@yourcompany.com&gt;', to: 'Toàn thể nhân viên', date: '19/03/2026', body: `<p>Chào cả nhà,</p><br><p>Teambuilding vừa rồi vui quá! Hương gửi cả nhà một vài tấm ảnh kỷ niệm của đội mình chụp lúc hoàng hôn Cát Bà.</p>`, interaction: { type: 'safe_file', text: '🖼️ cat_ba_group_photo_01.jpg (1.5 MB)' } },
-            { isPhishing: true, title: 'CHÚC MỪNG! Bạn đã trúng giải Jackpot: 1 xe máy Honda SH 150i', sender: 'Quay Số May Mắn Vn &lt;lucky@sweepstakes-winner.net&gt;', to: 'Người dùng may mắn', date: '19/03/2026', body: `<p>Chào Đinh Nhật Hoàng,</p><br><p>BẠN LÀ NGƯỜI MAY MẮN TRÚNG GIẢI ĐẶC BIỆT CỦA CHƯƠNG TRÌNH TRI ÂN KHÁCH HÀNG THÁNG 3!</p><br><p>Vui lòng đăng ký nhận giải ngay trong vòng 24h:</p>`, interaction: { type: 'link', text: '👉 NHẬN THƯỞNG NGAY: https://winner-honda.bitly.ws/claim' }, explanation: `<b>Dấu hiệu bỏ lỡ:</b><br><br>1. <span class="red-flag">Địa chỉ người gửi lạ:</span> Không phải domain chính thống Honda Việt Nam.<br><br>2. <span class="red-flag">Link rút gọn bẫy:</span> Link dẫn đến một tên miền đáng ngờ.` },
-            { isPhishing: false, title: 'Google Security Alert: Đăng nhập mới trên thiết bị "OnePlus 10 Pro"', sender: 'Google &lt;no-reply@accounts.google.com&gt;', to: 'hoangdn.work@gmail.com', date: '19/03/2026', body: `<p>Đinh Nhật Hoàng thân mến,</p><br><p>Google vừa ghi nhận một lượt đăng nhập mới vào tài khoản của bạn từ một thiết bị Android mới lúc 09:30 AM.</p><br><p>Nếu là bạn, bạn có thể bỏ qua thư này.</p>`, interaction: { type: 'safe_link', text: 'Nếu KHÔNG phải là bạn, hãy click kiểm tra hoạt động.' } },
-            { isPhishing: true, title: '[QUAN TRỌNG] Quy tắc ứng xử mới của Tập đoàn - Vui lòng rà soát', sender: 'HR Department &lt;hr@yourcompany.com&gt;', to: 'Toàn thể nhân viên', date: '19/03/2026', body: `<p>Kính gửi toàn thể nhân viên,</p><br><p>Ban giám đốc vừa ban hành bộ "Quy tắc ứng xử trên mạng xã hội v2.0".</p><br><p>Vui lòng mở file đính kèm để xem chi tiết và ký xác nhận rà soát trước khi quy tắc có hiệu lực.</p>`, interaction: { type: 'fake_file', text: '📄 quy_tac_ung_xu_v2.0.doc.scr' }, explanation: `<b>Dấu hiệu bỏ lỡ:</b><br><br>1. <span class="red-flag">Đuôi file SCR:</span> File đính kèm có đuôi <I>.doc.scr</I> (SCR là file ScreenSaver). Đây là một kịch bản mã độc nguy hiểm.` },
-            { isPhishing: false, title: 'Xác nhận đăng ký tham gia Workshop "Bảo mật trong Microservices"', sender: 'Phòng Hội Thảo &lt;workshop@tech-academy.edu.vn&gt;', to: 'Đinh Nhật Hoàng', date: '19/03/2026', body: `<p>Chào Đinh Nhật Hoàng,</p><br><p>Chúc mừng! Bạn đã đăng ký thành công vào Workshop "Bảo mật trong Microservices" diễn ra vào 25/03 tới.</p><br><p>Vui lòng click vào link để xác nhận tham gia và nhận mã QR check-in.</p>`, interaction: { type: 'safe_link', text: '✅ Nhấn Vào Đây Để Lấy Mã QR Check-in' } },
-            { isPhishing: true, title: 'Tài khoản Microsoft của bạn có thể đã bị khóa', sender: 'Tập đoàn Microsoft &lt;security@microsoft-verify.net&gt;', to: 'hoang.dinh.user', date: '19/03/2026', body: `<p>Cảnh báo bảo mật từ Microsoft,</p><br><p>Chúng tôi phát hiện một nỗ lực đăng nhập không hợp lệ vào tài khoản của bạn từ một địa chỉ IP lạ tại Ukraine.</p><br><p>Tài khoản của bạn đã bị khóa để bảo vệ dữ liệu. Vui lòng click để xác minh ngay.</p>`, interaction: { type: 'link', text: '🔗 https://login.microsoftonline.com.account-verify.net/reset' }, explanation: `<b>Dấu hiệu bỏ lỡ:</b><br><br>1. <span class="red-flag">Domain giả mạo Microsoft:</span> Email đến từ <I>microsoft-verify.net</I> (domain thật của MS là <I>microsoft.com</I>). Link cũng dẫn đến <I>account-verify.net</I>.` },
-            { isPhishing: false, title: 'Biên bản cuộc họp Team Project tháng 3 (PDF)', sender: 'Hà My - Project Manager &lt;myh@yourcompany.com&gt;', to: 'Project Team', date: '19/03/2026', body: `<p>Kính gửi cả nhà,</p><br><p>My gửi kèm theo email này biên bản cuộc họp Team Project ngày 15/03/2026.</p><br><p>Mọi người rà soát và cho My feedback trước khi My gửi báo cáo cho Giám đốc.</p>`, interaction: { type: 'safe_file', text: '📄 Project_Meeting_Minutes_March_2026.pdf (320 KB)' } }
-        ];
+        const scenarios = [
+    {
+        id: 1, type: 'trap', difficulty: 'Dễ',
+        zaloMsg: "Chào Hoàng, anh vừa gửi mail bản thảo dự án 2026 cho em. Check rồi báo cáo sếp trước 2h nhé!",
+        senderDisplay: "Sếp Tổng (Nguyễn Văn A)",
+        senderReal: "ceo-thanglong.edu@gmail.com", // SAI: Dùng Gmail cá nhân thay vì domain trường
+        subject: "[KHẨN CẤP] Bản thảo dự án bảo mật 2026",
+        body: "Chào em, file này cực kỳ quan trọng. Em nhấn vào link dưới để tải về từ Google Drive của sếp nhé: <br><br><a href='#' onclick='checkAnswer(\"trap\")' style='color:#1a73e8; font-weight:bold;'>https://drive.google.com.manager-file.net/share/d/1x92...</a>",
+        explanation: "Hacker giả mạo Sếp trên Zalo. Sếp thật không bao giờ dùng <b>@gmail.com</b> gửi tài liệu mật. Ngoài ra link dẫn tới domain <b>.net</b> lạ."
+    },
+    {
+        id: 2, type: 'safe', difficulty: 'Dễ',
+        zaloMsg: "Sếp vừa gửi lịch họp tuần tới qua mail, em cập nhật vào Google Calendar giúp sếp.",
+        senderDisplay: "Sếp Tổng (Nguyễn Văn A)",
+        senderReal: "ceo@thanglong.edu.vn", // ĐÚNG: Domain trường
+        subject: "Lịch họp nội bộ tuần 04/2026",
+        body: "Chào Hoàng, đây là lịch họp chi tiết cho tuần tới của Team IT. <br><br>Lịch họp: <b>Thứ 2 (8:00 AM) - Phòng 402</b>.<br>Thứ 4 (2:00 PM) - Online Meet.",
+        explanation: "Email an toàn. Địa chỉ người gửi đúng chuẩn domain công ty và nội dung khớp hoàn toàn với tin nhắn Zalo."
+    },
+    {
+        id: 3, type: 'trap', difficulty: 'Trung bình',
+        zaloMsg: "Em ơi, My kế toán đây. Chị gửi lại phiếu lương tháng 3 đã điều chỉnh, em xem có khớp không nhé.",
+        senderDisplay: "Phòng Kế Toán (My NT)",
+        senderReal: "hr-thanglong@outlook.com.vn", // SAI: Domain Outlook lạ
+        subject: "Phiếu lương tháng 03/2026 - Đã điều chỉnh",
+        body: "Chào Hoàng, chị gửi em file PDF bảng lương tháng này. Vui lòng kiểm tra kỹ.<br><br>File đính kèm: <b style='color:blue; cursor:pointer;' onclick='checkAnswer(\"trap\")'>Bang_luong_T3.pdf.exe</b>",
+        explanation: "Cảnh giác cao độ với file có đuôi mở rộng kép <b>.pdf.exe</b>. Đây là mã độc thực thi, không phải tài liệu PDF."
+    },
+    {
+        id: 4, type: 'safe', difficulty: 'Trung bình',
+        zaloMsg: "Duy IT đây, tớ vừa gửi mail xác nhận cấp quyền truy cập Server cho cậu đó.",
+        senderDisplay: "IT Support (Duy Nguyen)",
+        senderReal: "it-support@thanglong.edu.vn", // ĐÚNG
+        subject: "Xác nhận cấp quyền truy cập Server nội bộ",
+        body: "Chào Hoàng, yêu cầu của bạn đã được phê duyệt. Vui lòng đăng nhập hệ thống để kiểm tra.<br><br>Link: <a href='#' onclick='checkAnswer(\"safe\")' style='color:#1a73e8;'>https://portal.thanglong.edu.vn/auth</a>",
+        explanation: "Email chính thống từ bộ phận IT nội bộ, đường dẫn portal chuẩn của trường."
+    },
+    {
+        id: 5, type: 'trap', difficulty: 'Khó',
+        zaloMsg: "Microsoft vừa báo lỗi tài khoản Office của em có vấn đề, check mail xử lý ngay không bị khóa acc đấy.",
+        senderDisplay: "Microsoft Security Team",
+        senderReal: "no-reply@micros0ft.com", // SAI: Typosquatting (số 0 thay cho chữ o)
+        subject: "[Cảnh báo] Tài khoản Office 365 của bạn bị tạm khóa",
+        body: "Phát hiện đăng nhập lạ từ địa chỉ IP: 14.232.x.x. Vui lòng xác minh danh tính ngay để bảo vệ tài khoản.<br><br><button onclick='checkAnswer(\"trap\")' style='padding:10px; background:#0078d4; color:white; border:none; cursor:pointer;'>XÁC MINH NGAY</button>",
+        explanation: "Hacker dùng kỹ thuật <b>Typosquatting</b> (thay chữ o bằng số 0 trong tên miền micros0ft). Rất khó nhận ra nếu không soi kỹ."
+    },
+    {
+        id: 6, type: 'safe', difficulty: 'Khó',
+        zaloMsg: "LinkedIn báo có người muốn kết nối với cậu kìa, chắc là bên tuyển dụng đấy.",
+        senderDisplay: "LinkedIn Notifications",
+        senderReal: "notifications-noreply@linkedin.com", // ĐÚNG
+        subject: "Dinh Nhat Hoang, bạn có 5 lời mời kết nối mới",
+        body: "Xem danh sách những người muốn kết nối với bạn trên mạng xã hội nghề nghiệp LinkedIn.<br><br><a href='#' onclick='checkAnswer(\"safe\")' style='color:#00a0dc;'>Xem lời mời</a>",
+        explanation: "Email tự động từ hệ thống LinkedIn chính thống với tên miền chuẩn."
+    },
+    {
+        id: 7, type: 'trap', difficulty: 'Rất khó',
+        zaloMsg: "Bên ngân hàng vừa gửi mail xác nhận sao kê thẻ tín dụng cho cậu kìa.",
+        senderDisplay: "Vietcombank E-Banking",
+        senderReal: "ebanking@vcb-digital.com.vn", // SAI: Domain giả mạo (VCB thật là vietcombank.com.vn)
+        subject: "Sao kê giao dịch tháng 03/2026 - Thẻ Visa xxx123",
+        body: "Chào quý khách, vui lòng nhấn vào nút bên dưới để xem sao kê chi tiết tháng này.<br><br><button onclick='checkAnswer(\"trap\")' style='padding:10px; background:#009245; color:white; border:none; cursor:pointer;'>XEM SAO KÊ</button>",
+        explanation: "Email mạo danh ngân hàng cực kỳ tinh vi. Tên miền <b>vcb-digital.com.vn</b> là giả mạo để đánh lừa người dùng."
+    },
+    {
+        id: 8, type: 'safe', difficulty: 'Rất khó',
+        zaloMsg: "Canteen báo menu cơm trưa tuần mới có rồi đó Hoàng.",
+        senderDisplay: "Canteen Thang Long",
+        senderReal: "canteen@thanglong.edu.vn", // ĐÚNG
+        subject: "Thực đơn cơm trưa tuần 4 - Tháng 3",
+        body: "Thân gửi cán bộ giảng viên và sinh viên thực đơn cơm trưa tuần này tại Canteen nhà A.<br><br>Xem menu tại: <a href='#' onclick='checkAnswer(\"safe\")' style='color:green;'>Menu_Tuan_4.pdf</a>",
+        explanation: "Email thông báo nội bộ thường xuyên, domain người gửi hoàn toàn tin cậy."
+    },
+    {
+        id: 9, type: 'trap', difficulty: 'Chuyên gia',
+        zaloMsg: "Menu cơm trưa nay có mã giảm giá 50% cho nhân viên, quét QR đặt món sớm đi không hết nhé!",
+        senderDisplay: "Canteen Online",
+        senderReal: "no-reply@canteen-thanglong.com", // SAI
+        subject: "Ưu đãi đặt cơm trưa - Giảm giá 50%",
+        body: "Quét mã QR dưới đây để nhận voucher giảm giá 50% khi đặt cơm qua App.<br><br><img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://login.vcb-portal.net' style='width:120px; cursor:pointer;' onclick='checkAnswer(\"trap\")'>",
+        explanation: "Kỹ thuật <b>Quishing (QR Phishing)</b>. Hacker dùng mã QR để che giấu đường link lừa đảo dẫn tới trang chiếm đoạt tài khoản."
+    },
+    {
+        id: 10, type: 'safe', difficulty: 'Chuyên gia',
+        zaloMsg: "Google gửi mail báo cậu vừa dùng bộ nhớ vượt mức kìa, check xem có cần nâng cấp không.",
+        senderDisplay: "Google One",
+        senderReal: "googleone-noreply@google.com", // ĐÚNG
+        subject: "Thông báo: Bộ nhớ Google của bạn đã đầy 90%",
+        body: "Dung lượng lưu trữ của bạn sắp hết. Hãy dọn dẹp hoặc nâng cấp để tiếp tục sử dụng Google Drive và Gmail.<br><br><a href='#' onclick='checkAnswer(\"safe\")' style='color:#1a73e8;'>Quản lý bộ nhớ</a>",
+        explanation: "Email thông báo hệ thống chính thức từ Google với đầy đủ thông tin xác thực."
+    }
+];
 
-        renderEmail(currentEmailIndex);
-
-        function renderEmail(index) {
-            const area = document.getElementById('emailArea');
-            area.innerHTML = '';
+        function initLevel() {
+            const s = scenarios[currentIdx];
             
-            if (index >= emailScenarios.length) {
-                showFinalSummary();
-                return;
-            }
-
-            const email = emailScenarios[index];
-            document.getElementById('gameStats').innerHTML = `⏳ Câu ${index + 1}/10 | Điểm Cảnh Giác: ${userScore}`;
-
-            let interactHTML = '';
-            if (email.interaction) {
-                if (email.isPhishing) {
-                    if (email.interaction.type === 'link') interactHTML = `<span class="interactive-element" onclick="showPhishingFailureModal()">${email.interaction.text}</span>`;
-                    else if (email.interaction.type === 'fake_file') interactHTML = `<span class="interactive-element fake-file" onclick="showPhishingFailureModal()"><span class="file-icon">📁</span> ${email.interaction.text}</span>`;
-                } else {
-                    if (email.interaction.type === 'safe_link') interactHTML = `<span class="interactive-element" onclick="showSuccessTrustModal('${email.interaction.text}')">${email.interaction.text}</span>`;
-                    else if (email.interaction.type === 'safe_file') interactHTML = `<span class="interactive-element" onclick="showSuccessTrustModal('${email.interaction.text}')"><span class="file-icon">📄</span> ${email.interaction.text}</span>`;
-                }
-            }
-
-            area.innerHTML = `
-                <div class="email-card ${email.isPhishing ? 'phishing-card' : ''}">
-                    <div class="email-header">
-                        <h1>${email.title}</h1>
-                        <div class="sender-info">
-                            <p><strong>Từ:</strong> <span class="sender-email">${email.sender}</span></p>
-                            <p><strong>Tới:</strong> ${email.to}</p>
-                            <p><strong>Ngày gửi:</strong> ${email.date}</p>
-                        </div>
-                    </div>
-                    <div class="email-body">
-                        ${email.body}
-                        <br>${interactHTML}<br>
-                        <p><br>Trân trọng.</p>
-                    </div>
+            // Reset Apps
+            document.getElementById('mail-list').innerHTML = `
+                <div class="mail-item" onclick="viewMail()">
+                    <div style="width:200px; font-weight:bold;">${s.senderDisplay}</div>
+                    <div style="flex:1;"><strong>${s.subject}</strong> - <span style="color:#777;">Chào em, file này cực kỳ quan trọng...</span></div>
                 </div>
             `;
+            document.getElementById('zalo-chat-content').innerHTML = `<div class="msg received">${s.zaloMsg}</div>`;
+            
+            // Setup Mail View
+            document.getElementById('mail-subject').innerText = s.subject;
+            document.getElementById('mail-sender-display').innerText = s.senderDisplay;
+            document.getElementById('real-address').innerText = `<${s.senderReal}>`;
+            document.getElementById('mail-body').innerHTML = s.body;
+            document.getElementById('btn-detail').style.display = 'inline';
+            document.getElementById('real-address').style.display = 'none';
+
+            // Notify
+            setTimeout(() => {
+                document.getElementById('notify-msg').innerText = s.zaloMsg;
+                document.getElementById('notification').classList.add('show');
+                setTimeout(() => document.getElementById('notification').classList.remove('show'), 5000);
+            }, 1000);
         }
 
-        // HÀM RESET NÚT BẤM CỐT LÕI
-        function resetModalButton() {
-            const actionBtn = document.getElementById('modalActionBtn');
-            actionBtn.innerHTML = 'Tiếp Tục';
-            actionBtn.onclick = nextEmail;
+        function showAddress() {
+            document.getElementById('btn-detail').style.display = 'none';
+            document.getElementById('real-address').style.display = 'inline';
         }
 
-        function handleReport() {
-            if (!gameActive) return;
-            const email = emailScenarios[currentEmailIndex];
-            resetModalButton(); // Reset nút
-            if (email.isPhishing) {
-                userScore += 50;
-                showPhishingSuccessReportModal();
+        function checkAnswer(action) {
+            const s = scenarios[currentIdx];
+            const overlay = document.getElementById('overlay');
+            const title = document.getElementById('res-title');
+            const msg = document.getElementById('res-msg');
+
+            overlay.style.display = 'flex';
+
+            if ((action === 'report' && s.type === 'trap') || (action === 'safe' && s.type === 'safe')) {
+                title.innerText = "🏆 XUẤT SẮC!";
+                title.style.color = "#2ecc71";
+                msg.innerHTML = `Bạn đã xử lý tình huống rất tốt. <br><br>${s.explanation}`;
+                updateStats(500);
             } else {
-                showIncorrectSafeReportModal();
+                title.innerText = "💥 SẬP BẪY!";
+                title.style.color = "#d93025";
+                msg.innerHTML = `Bạn đã thiếu cảnh giác và bị Hacker tấn công. <br><br>${s.explanation}`;
+                updateStats(0);
             }
         }
 
-        function showSuccessTrustModal(type) {
-            resetModalButton(); // Reset nút
-            userScore += 50;
-            const modal = document.getElementById('resultModal');
-            document.getElementById('modalBox').className = 'modal-content success-theme';
-            document.getElementById('modalIcon').innerHTML = '🏆';
-            document.getElementById('modalTitle').innerHTML = 'HÀNH ĐỘNG ĐÚNG!';
-            document.getElementById('modalDesc').innerHTML = `Tuyệt vời! Bạn đã chọn TIN TƯỞNG một email chính thống. Tương tác an toàn. Bạn được cộng 50 điểm cảnh giác!`;
-            modal.style.display = 'flex';
+        function updateStats(points) {
+            exp += points;
+            if (exp >= 1000) { lv++; exp = 0; }
+            document.getElementById('level-txt').innerText = `LV. ${lv}`;
+            document.getElementById('exp-txt').innerText = `${exp}/1000 EXP`;
+            document.getElementById('exp-fill').style.width = (exp/1000*100) + "%";
         }
 
-        function showPhishingFailureModal() {
-            gameActive = false;
-            const email = emailScenarios[currentEmailIndex];
-            const modal = document.getElementById('resultModal');
-            const actionBtn = document.getElementById('modalActionBtn');
-            
-            document.getElementById('modalBox').className = 'modal-content fail-theme';
-            document.getElementById('modalIcon').innerHTML = '💥';
-            document.getElementById('modalTitle').innerHTML = 'GAME OVER!';
-            document.getElementById('modalDesc').innerHTML = `<b>Bạn đã bị sập bẫy lừa đảo!</b> Đây là kịch bản lừa đảo nguy hiểm.<br><br>${email.explanation}`;
-            
-            // Đổi chức năng nút khi thua
-            actionBtn.innerHTML = 'Xem Tổng Kết';
-            actionBtn.onclick = showFinalSummary; 
-            modal.style.display = 'flex';
+        function nextLevel() {
+            document.getElementById('overlay').style.display = 'none';
+            currentIdx++;
+            if (currentIdx < scenarios.length) {
+                initLevel();
+                backToInbox();
+            } else {
+                alert("Chúc mừng Đinh Nhật Hoàng! Bạn đã vượt qua tất cả thử thách.");
+                location.reload();
+            }
         }
 
-        function showIncorrectSafeReportModal() {
-            userScore -= 30;
-            if (userScore < 0) userScore = 0;
-            const modal = document.getElementById('resultModal');
-            document.getElementById('modalBox').className = 'modal-content incorrect-report-theme';
-            document.getElementById('modalIcon').innerHTML = '❌';
-            document.getElementById('modalTitle').innerHTML = 'LỖI NHẬN DIỆN!';
-            document.getElementById('modalDesc').innerHTML = `Bạn đã báo cáo nhầm một email AN TOÀN thành lừa đảo. Bạn bị trừ 30 điểm cảnh giác. Hãy soi xét kỹ hơn!`;
-            modal.style.display = 'flex';
+        // Window Controls
+        function openApp(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeApp(id) { document.getElementById(id).style.display = 'none'; }
+        function viewMail() { 
+            document.getElementById('mail-list').style.display = 'none'; 
+            document.getElementById('mail-view').style.display = 'block'; 
+        }
+        function backToInbox() { 
+            document.getElementById('mail-list').style.display = 'block'; 
+            document.getElementById('mail-view').style.display = 'none'; 
         }
 
-        function showPhishingSuccessReportModal() {
-            const modal = document.getElementById('resultModal');
-            document.getElementById('modalBox').className = 'modal-content success-theme';
-            document.getElementById('modalIcon').innerHTML = '🚩';
-            document.getElementById('modalTitle').innerHTML = 'PHÁT HIỆN THÀNH CÔNG!';
-            document.getElementById('modalDesc').innerHTML = `Đôi mắt tinh tường! Đây chính xác là một email lừa đảo nguy hiểm. Hệ thống cộng 50 điểm cảnh giác!`;
-            modal.style.display = 'flex';
-        }
+        // Draggable logic
+        document.querySelectorAll('.win-header').forEach(header => {
+            header.onmousedown = function(e) {
+                let win = header.parentElement;
+                let shiftX = e.clientX - win.getBoundingClientRect().left;
+                let shiftY = e.clientY - win.getBoundingClientRect().top;
+                function moveAt(pageX, pageY) {
+                    win.style.left = pageX - shiftX + 'px';
+                    win.style.top = pageY - shiftY + 'px';
+                }
+                document.onmousemove = function(e) { moveAt(e.pageX, e.pageY); };
+                header.onmouseup = function() { document.onmousemove = null; };
+            };
+        });
 
-        function nextEmail() {
-            document.getElementById('resultModal').style.display = 'none';
-            currentEmailIndex++;
-            renderEmail(currentEmailIndex);
-        }
-
-        function showFinalSummary() {
-            document.getElementById('resultModal').style.display = 'none';
-            document.getElementById('gameStats').style.display = 'none';
-            document.querySelector('.action-zone').style.display = 'none';
-            const area = document.getElementById('emailArea');
-            area.innerHTML = '';
-
-            let evaluation = ""; let finalIcon = "";
-            if (userScore >= 400) { evaluation = "Bậc Thầy Cảnh Giác! Sức đề kháng an ninh mạng của bạn cực kỳ tuyệt vời."; finalIcon = "🛡️"; }
-            else if (userScore >= 250) { evaluation = "Lính Gác Có Phản Xạ! Bạn nhận diện tốt hầu hết các tình huống, cần soi kỹ file đuôi kép."; finalIcon = "👀"; }
-            else { evaluation = "Nạn Nhân Tiềm Năng! Phản xạ của bạn chưa tốt, hãy chú ý hơn đến các đường link lạ."; finalIcon = "⚠️"; }
-
-            area.innerHTML = `
-                <div style="background: white; padding: 50px; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <div style="font-size: 80px; margin-bottom: 20px;">${finalIcon}</div>
-                    <h1 style="color: #333; font-size: 32px; margin-bottom: 20px;">BẢNG TỔNG KẾT CyberShield v2.0</h1>
-                    <div style="margin: 30px auto; padding: 30px; border: 3px solid #1abc9c; background-color: #f1f8ff; border-radius: 10px; width: 300px;">
-                        <span style="font-size: 18px; color: #7f8c8d; font-weight: bold;">ĐIỂM SỨC ĐỀ KHÁNG:</span><br>
-                        <span style="font-size: 60px; color: #1abc9c; font-weight: bold;">${userScore}</span><br>
-                        <span style="font-size: 14px; color: #7f8c8d;">(Mức an toàn tối thiểu: 200)</span>
-                    </div>
-                    <p style="font-size: 20px; color: #2c3e50; font-weight: bold; padding: 20px; background: #e1efff; border-radius: 5px; border-left: 5px solid #1abc9c; margin-bottom: 30px;">
-                       ${evaluation}
-                    </p>
-                    <button class="btn-modal" style="background: #16a085; padding: 12px 24px; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;" onclick="restartGame()">Chơi Lại</button>
-                </div>
-            `;
-        }
-
-        function restartGame() {
-            currentEmailIndex = 0;
-            userScore = 100;
-            gameActive = true;
-            document.getElementById('gameStats').style.display = 'block';
-            document.querySelector('.action-zone').style.display = 'flex';
-            renderEmail(currentEmailIndex);
-        }
+        initLevel();
     </script>
 </body>
 </html>
